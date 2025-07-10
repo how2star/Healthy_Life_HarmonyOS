@@ -10,8 +10,8 @@
 /.clang-tidy
 **/.test
 
-build-profile.json5
-oh-package.json5
+/build-profile.json5
+/oh-package.json5
 /hvigor
 
 /entry/build
