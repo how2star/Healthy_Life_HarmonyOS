@@ -74,9 +74,11 @@ export default class UserInfoApi {
             weight: '50',
             height: '160',
             icon: '',
+            signature:'这是一条个性签名'
           };
           tmp.id = resultSet.getDouble(resultSet.getColumnIndex('id'));
           tmp.username = resultSet.getString(resultSet.getColumnIndex('username'));
+          tmp.signature = resultSet.getString(resultSet.getColumnIndex('signature'));
           tmp.year = resultSet.getString(resultSet.getColumnIndex('year'));
           tmp.mouth = resultSet.getString(resultSet.getColumnIndex('mouth'));
           tmp.date = resultSet.getString(resultSet.getColumnIndex('date'));

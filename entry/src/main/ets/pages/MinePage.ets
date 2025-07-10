@@ -39,6 +39,7 @@ export struct MineIndex {
         if (result && result.length > 0) {
           this.userInfo.push(result[0]);
           this.nickname = this.userInfo[0]?.username;
+          this.signature = this.userInfo[0]?.signature;
           this.icon = this.userInfo[0].icon;
           Logger.info('MinePage', `${this.nickname}`);
         } else {
@@ -48,27 +49,31 @@ export struct MineIndex {
             newUserInfo.id = id;
             this.userInfo.push(newUserInfo);
             this.nickname = this.userInfo[0].username;
+            this.signature = this.userInfo[0].signature;
             Logger.info('MinePage', `${this.nickname}`);
+            Logger.info('MinePage', `${this.signature}`);
           });
         }
       }, false);
     });
 
     const TAG: string = 'ThreadModel';
-    // 定义一个eventId为1的事件
-    let event: emitter.InnerEvent = {
+    // 分别定义name和signature对应的事件
+    let nameEvent: emitter.InnerEvent = {
       eventId: 1
     };
+    emitter.on(nameEvent, (eventData) => {
+      const newName = eventData.data?.content as string;
+      this.nickname = newName;
+      Logger.info('MinePage', `昵称更新回调: ${newName}`);
+    });
     // 收到eventId为1的事件后执行该回调
-    let callback = (eventData: emitter.EventData): void => {
-      // 更新用户信息
-      let userName = eventData.data?.content as string
-      this.userInfo[0].username = userName;
-      this.nickname = this.userInfo[0].username
-      Logger.info(TAG, 'event callback:' + JSON.stringify(eventData.data?.content));
-    };
-    // 订阅eventId为1的事件
-    emitter.on(event, callback);
+    let sigEvent: emitter.InnerEvent = { eventId: 2 };
+    emitter.on(sigEvent, (eventData) => {
+      const newSig = eventData.data?.content as string;
+      this.signature = newSig;
+      Logger.info('MinePage', `签名更新回调: ${newSig}`);
+    });
 
     await this.getIcon()
   }

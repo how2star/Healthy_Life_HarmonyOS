@@ -207,8 +207,8 @@ export class CommonConstants {
   static readonly USERINFO_TABLE: UserInfoTable = {
     tableName: 'userInfoTable',
     sqlCreate: 'CREATE TABLE IF NOT EXISTS userInfoTable(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, ' +
-      'year TEXT, mouth TEXT, date TEXT, gender TEXT, weight TEXT, height TEXT, icon TEXT)',
-    columns: ['id', 'username', 'year', 'mouth', 'date', 'gender', 'weight', 'height', 'icon']
+      'year TEXT, mouth TEXT, date TEXT, gender TEXT, weight TEXT, height TEXT, icon TEXT, signature TEXT)',
+    columns: ['id', 'username', 'year', 'mouth', 'date', 'gender', 'weight', 'height', 'icon', 'signature']
   };
   /**
    * Search text of Search component.

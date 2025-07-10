@@ -12,6 +12,7 @@
     "pages/VersionNowPage",
     "pages/FeedbackPage",
     "pages/HelpPage",
-    "pages/FunctionPage"
+    "pages/FunctionPage",
+    "pages/MineEditSignaturePage"
   ]
 }

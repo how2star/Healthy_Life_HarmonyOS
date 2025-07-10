@@ -42,7 +42,7 @@ struct Index {
   private selectHeightIndex: number = 160 - 80
   @State selectWeight: string = "50"
   @State selectHeight: string = "160"
-
+  @State selectSignature: string = '';
   onCancel() {
   }
 
@@ -81,6 +81,7 @@ struct Index {
         // 初始身高体重
         this.selectWeight = this.userInfo[0].weight
         this.selectHeight = this.userInfo[0].height
+        this.selectSignature = this.userInfo[0].signature || ''
         this.selectWeightIndex = Number(this.selectWeight) - 20
         this.selectHeightIndex = Number(this.selectHeight) - 80
         // 初始性别
@@ -167,8 +168,14 @@ struct Index {
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.no_data_background'))
               .textAlign(TextAlign.End)
-          } else {
+          } else if (url == '昵称'){
             Text(this.nickname)
+              .fontSize($r('app.float.card_padding'))
+              .fontWeight(FontWeight.Medium)
+              .fontColor($r('app.color.no_data_background'))
+              .textAlign(TextAlign.End)
+          } else {
+            Text(this.selectSignature)
               .fontSize($r('app.float.card_padding'))
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.no_data_background'))
@@ -318,6 +325,7 @@ struct Index {
       Navigation() {
         Column() {
           this.Options($r('app.string.user_name'), 'pages/MineEditNamePage')
+          this.Options($r('app.string.user_signature'), 'pages/MineEditSignaturePage')
           this.Options($r('app.string.gender'), '性别')
           this.Options($r('app.string.birth_data'), '生日')
           this.Options($r('app.string.height'), '身高')

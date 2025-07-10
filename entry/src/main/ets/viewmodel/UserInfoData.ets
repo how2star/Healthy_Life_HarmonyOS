@@ -15,7 +15,7 @@
 
 export default class AccountData {
   id: number = -1;
-  username: string = '用户 001';
+  username: string = 'SpongeBob';
   year: string = '2000';
   mouth: string = '1';
   date: string = '1';
@@ -23,4 +23,5 @@ export default class AccountData {
   weight: string = '50';
   height: string = '160';
   icon: string = '';
+  signature: string = "这是一条个性签名";
 }

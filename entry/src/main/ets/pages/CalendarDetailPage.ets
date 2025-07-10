@@ -31,7 +31,7 @@ function isAchieved(dateArr: Array<WeekDateModel>, cj: CJDateItem) {
       .substring(0, 4)}${Number(dateStr_item_temp.toString()
       .substring(5, 7))}${Number(dateStr_item_temp.toString()
       .substring(8, 10))}`;
-    let dateStr: string = `${cj.fullYear}${(cj.month + 1) % 12}${cj.date}`;
+    let dateStr: string = `${cj.fullYear}${(cj.month) % 12}${cj.date}`;
     if (Number(dateStr_item) == Number(dateStr)) {
       if (item.dayInfo.targetTaskNum == item.dayInfo.finTaskNum && item.dayInfo.targetTaskNum != 0) {
         result = true;

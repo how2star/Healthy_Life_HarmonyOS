@@ -187,10 +187,7 @@ export struct FunctionPage {
           .position({ x: 16, y: 16 })
           .onClick(() => this.goBack());
 
-        Text('功能介绍')
-          .fontSize(20).fontWeight(FontWeight.Medium)
-          .fontColor('#FFFFFF')
-          .position({ x: 40, y: 200 });
+
       }
       .width('100%');   // ← 仅保留 width，去掉多余的 height(200)
 

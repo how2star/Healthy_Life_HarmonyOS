@@ -217,6 +217,10 @@
       "value": "昵称"
     },
     {
+      "name": "user_signature",
+      "value": "签名"
+    },
+    {
       "name": "gender",
       "value": "性别"
     },
