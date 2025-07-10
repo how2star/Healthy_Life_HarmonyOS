@@ -41,12 +41,12 @@ struct Index {
   private selectWeightIndex: number = 50 - 20
   private selectHeightIndex: number = 160 - 80
   @State selectWeight: string = "50"
-  @State selectHeight: string = "160"
-  @State selectSignature: string = '';
+  @State selectHeight: string = "170"
+  @State selectSignature: string = '这是一条个人签名';
+  @State nickname: string = "SpongeBob";
   onCancel() {
   }
 
-  @State nickname: string = Const.NICK_NAME;
   private UserInfoTable = new UserInfoApi(() => {
   });
   @State userInfo: UserInfoData[] = [];
@@ -81,7 +81,7 @@ struct Index {
         // 初始身高体重
         this.selectWeight = this.userInfo[0].weight
         this.selectHeight = this.userInfo[0].height
-        this.selectSignature = this.userInfo[0].signature || ''
+        this.selectSignature = this.userInfo[0].signature
         this.selectWeightIndex = Number(this.selectWeight) - 20
         this.selectHeightIndex = Number(this.selectHeight) - 80
         // 初始性别
@@ -95,13 +95,8 @@ struct Index {
     let event: emitter.InnerEvent = {
       eventId: 1
     };
-
     // 收到eventId为1的事件后执行该回调
     let callback = (eventData: emitter.EventData): void => {
-      // promptAction.showToast({
-      //   message: JSON.stringify(eventData.data?.content)
-      // });
-      // 更新用户信息
       let userName = eventData.data?.content as string
       this.userInfo[0].username = userName;
       this.nickname = this.userInfo[0].username
@@ -109,31 +104,22 @@ struct Index {
     };
     // 订阅eventId为1的事件
     emitter.on(event, callback);
-  }
 
-  // onPageShow() {
-  //   // 查找用户信息
-  //   this.UserInfoTable.getRdbStore(() => { // 获取数据库
-  //     this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
-  //       this.userInfo.push(result[0]);
-  //       this.nickname = this.userInfo[0].username
-  //       Logger.info('MinePage', `${this.nickname}`);
-  //     }, false);
-  //   });
-  //   Logger.info('MinePage', `${this.nickname}`);
-  // }
-  //
-  // onForeground() {
-  //   // 查找用户信息
-  //   this.UserInfoTable.getRdbStore(() => { // 获取数据库
-  //     this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
-  //       this.userInfo.push(result[0]);
-  //       this.nickname = this.userInfo[0].username
-  //       Logger.info('MinePage', `${this.nickname}`);
-  //     }, false);
-  //   });
-  //   Logger.info('MinePage', `${this.nickname}`);
-  // }
+
+    let event2: emitter.InnerEvent = {
+      eventId: 2
+    };
+
+    let callback2 = (eventData: emitter.EventData): void => {
+      let userSignature = eventData.data?.content as string
+      this.userInfo[0].signature = userSignature;
+      // Logger.info(TAG, `加载签名：${this.userInfo[0].signature}`);
+      this.selectSignature = this.userInfo[0].signature
+      // Logger.info(TAG, 'event callback:' + JSON.stringify(eventData.data?.content));
+    };
+    // 订阅eventId为1的事件
+    emitter.on(event2, callback2);
+  }
 
   @Builder
   Options(name: Resource, url: string) {
@@ -168,13 +154,13 @@ struct Index {
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.no_data_background'))
               .textAlign(TextAlign.End)
-          } else if (url == '昵称'){
+          } else if (url == 'pages/MineEditNamePage'){
             Text(this.nickname)
               .fontSize($r('app.float.card_padding'))
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.no_data_background'))
               .textAlign(TextAlign.End)
-          } else {
+          } else if(url == 'pages/MineEditSignaturePage'){
             Text(this.selectSignature)
               .fontSize($r('app.float.card_padding'))
               .fontWeight(FontWeight.Medium)

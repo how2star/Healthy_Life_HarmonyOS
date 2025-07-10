@@ -92,14 +92,14 @@ struct MineEditSignaturePage {
   private UserInfoTable = new UserInfoApi(() => {
   });
 
-  aboutToAppear(): void {
-    this.UserInfoTable.getRdbStore(() => {
-      this.UserInfoTable.query(1, (result: UserInfoData[]) => {
-        this.userInfo = result;
-        this.signature = this.userInfo[0].signature || '';
-      }, false);
-    });
-  }
+  // aboutToAppear(): void {
+  //   this.UserInfoTable.getRdbStore(() => {
+  //     this.UserInfoTable.query(1, (result: UserInfoData[]) => {
+  //       this.userInfo = result;
+  //       this.signature = this.userInfo[0].signature
+  //     }, false);
+  //   });
+  // }
 
   private goBack() {
     router.back();
@@ -128,11 +128,11 @@ struct MineEditSignaturePage {
                 setTimeout(() => { this.dialogController?.close(); }, 1000);
                 return;
               }
-              this.UserInfoTable.getRdbStore(() => {
-                this.userInfo[0].signature = v;
-                Logger.info('MineEditSignaturePage', `更新签名: ${v}`);
-                this.UserInfoTable.updateData(this.userInfo[0], () => {});
-              });
+              // this.UserInfoTable.getRdbStore(() => {
+              //   this.userInfo[0].signature = v;
+              //   Logger.info('MineEditSignaturePage', `更新签名: ${v}`);
+              //   this.UserInfoTable.updateData(this.userInfo[0], () => {});
+              // });
               // 通知其他页面（可在监听处根据 eventId 更新 signature）
               this.UserInfoTable.getRdbStore(() => { // 获取数据库
                 this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
