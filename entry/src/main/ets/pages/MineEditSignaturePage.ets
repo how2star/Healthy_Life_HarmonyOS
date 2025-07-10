@@ -92,17 +92,13 @@ struct MineEditSignaturePage {
   private UserInfoTable = new UserInfoApi(() => {
   });
 
-  // aboutToAppear(): void {
-  //   this.UserInfoTable.getRdbStore(() => {
-  //     this.UserInfoTable.query(1, (result: UserInfoData[]) => {
-  //       this.userInfo = result;
-  //       this.signature = this.userInfo[0].signature
-  //     }, false);
-  //   });
-  // }
-
-  private goBack() {
-    router.back();
+  aboutToAppear(): void {
+    this.UserInfoTable.getRdbStore(() => {
+      this.UserInfoTable.query(1, (result: UserInfoData[]) => {
+        this.userInfo = [result[0]]
+        this.signature = this.userInfo[0].signature || ''
+      }, false)
+    })
   }
 
   build() {
@@ -122,31 +118,27 @@ struct MineEditSignaturePage {
             .width($r('app.float.default_120'))
             .height($r('app.float.default_40'))// Write the information and clear the content so that the text box is cleared after you click Save.
             .onClick(() => {
-              const v = this.signature.trim();
-              if(v === '' || v.length > 50){
-                this.dialogController?.open();
-                setTimeout(() => { this.dialogController?.close(); }, 1000);
-                return;
+              if(this.signature === '' || this.signature.length > 50){
+                if (this.dialogController != null) {
+                  this.dialogController.open();
+                  setTimeout(() => {
+                    this.dialogController?.close();
+                  }, 1000)
+                }
+                return
               }
-              // this.UserInfoTable.getRdbStore(() => {
-              //   this.userInfo[0].signature = v;
-              //   Logger.info('MineEditSignaturePage', `更新签名: ${v}`);
-              //   this.UserInfoTable.updateData(this.userInfo[0], () => {});
-              // });
-              // 通知其他页面（可在监听处根据 eventId 更新 signature）
               this.UserInfoTable.getRdbStore(() => { // 获取数据库
                 this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
-                  this.userInfo.push(result[0]);
+                  this.userInfo = [result[0]];
                   this.userInfo[0].signature = this.signature
                   Logger.info('MineEditSignaturePage', `${this.signature}`);
                   this.UserInfoTable.updateData(this.userInfo[0], () => {
+                    let event: emitter.InnerEvent =
+                      { eventId: 2, priority: emitter.EventPriority.LOW };
+                    let eventData: emitter.EventData =
+                      { data: { content: this.signature, id: 2, isEmpty: false } };
+                    emitter.emit(event, eventData);
                   });
-                  let event: emitter.InnerEvent =
-                    { eventId: 2, priority: emitter.EventPriority.LOW };
-                  let eventData: emitter.EventData =
-                    { data: { content: v, id: 2, isEmpty: false } };
-                  emitter.emit(event, eventData);
-                  // 发送eventId为2的事件，事件内容为eventData
                 }, false);
               });
 

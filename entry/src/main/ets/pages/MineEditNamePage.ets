@@ -44,6 +44,8 @@ struct CustomDialogExample {
 struct CustomDialogExample2 {
   controller?: CustomDialogController;
 
+
+
   build() {
     Column() {
       Text("保存成功")
@@ -106,6 +108,15 @@ struct Index {
   private UserInfoTable = new UserInfoApi(() => {
   });
 
+  aboutToAppear(): void {
+    this.UserInfoTable.getRdbStore(() => {
+      this.UserInfoTable.query(1, (result: UserInfoData[]) => {
+        this.userInfo = [result[0]]
+        this.name = this.userInfo[0].username || ''
+      }, false)
+    })
+  }
+
   build() {
     Row() {
       Navigation() {
@@ -135,7 +146,8 @@ struct Index {
               // 保存成功
               this.UserInfoTable.getRdbStore(() => { // 获取数据库
                 this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
-                  this.userInfo.push(result[0]);
+                  // this.userInfo.push(result[0]);
+                  this.userInfo = [result[0]];
                   this.userInfo[0].username = this.name
                   Logger.info('MineEditNamePage', `${this.name}`);
                   this.UserInfoTable.updateData(this.userInfo[0], () => {

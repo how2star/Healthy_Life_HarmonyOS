@@ -81,7 +81,7 @@ struct Index {
         // 初始身高体重
         this.selectWeight = this.userInfo[0].weight
         this.selectHeight = this.userInfo[0].height
-        this.selectSignature = this.userInfo[0].signature
+        this.selectSignature = this.userInfo[0].signature || "这是一条个性签名"
         this.selectWeightIndex = Number(this.selectWeight) - 20
         this.selectHeightIndex = Number(this.selectHeight) - 80
         // 初始性别

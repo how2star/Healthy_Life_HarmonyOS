@@ -38,8 +38,8 @@ export struct MineIndex {
       this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
         if (result && result.length > 0) {
           this.userInfo.push(result[0]);
-          this.nickname = this.userInfo[0]?.username;
-          this.signature = this.userInfo[0]?.signature;
+          this.nickname = this.userInfo[0].username || "SpongeBob";
+          this.signature = this.userInfo[0].signature || "这是一条个性签名";
           this.icon = this.userInfo[0].icon;
           Logger.info('MinePage', `${this.nickname}`);
         } else {
