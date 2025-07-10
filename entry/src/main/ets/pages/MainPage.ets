@@ -50,6 +50,8 @@ struct Index {
     }).catch((err: Error) => {
       Logger.error('onPageShow', `requestEnableNotification failed, message is ${err.message}`);
     });
+    // todo 强制查询数据库 会影响性能 不是一个好的做法
+    //this.homeStore.initData();
   }
 
   onPageShow() {

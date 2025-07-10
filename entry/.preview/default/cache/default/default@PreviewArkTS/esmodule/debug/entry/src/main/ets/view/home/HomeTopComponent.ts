@@ -107,7 +107,9 @@ export default class HomeTopView extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new WeekCalendar(this, { homeStore: this.__homeStore }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/HomeTopComponent.ets", line: 55, col: 7 });
+                    let componentCall = new 
+                    // WeekCalendar({ homeStore: $homeStore })
+                    WeekCalendar(this, { homeStore: this.homeStore }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/HomeTopComponent.ets", line: 56, col: 7 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -117,7 +119,9 @@ export default class HomeTopView extends ViewPU {
                     componentCall.paramsGenerator_ = paramsLambda;
                 }
                 else {
-                    this.updateStateVarsOfChildByElmtId(elmtId, {});
+                    this.updateStateVarsOfChildByElmtId(elmtId, {
+                        homeStore: this.homeStore
+                    });
                 }
             }, { name: "WeekCalendar" });
         }

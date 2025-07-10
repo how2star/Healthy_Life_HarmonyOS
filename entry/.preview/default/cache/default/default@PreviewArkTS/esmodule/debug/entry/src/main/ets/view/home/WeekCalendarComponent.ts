@@ -3,6 +3,7 @@ if (!("finalizeConstruction" in ViewPU.prototype)) {
 }
 interface WeekCalendar_Params {
     homeStore?: HomeStore;
+    updateTrigger?: number;
     currentPage?: number;
     scroller?: Scroller;
     scrollWidth?: number;
@@ -29,7 +30,8 @@ export class WeekCalendar extends ViewPU {
         if (typeof paramsLambda === "function") {
             this.paramsGenerator_ = paramsLambda;
         }
-        this.__homeStore = new SynchedPropertyObjectTwoWayPU(params.homeStore, this, "homeStore");
+        this.__homeStore = new SynchedPropertyNesedObjectPU(params.homeStore, this, "homeStore");
+        this.__updateTrigger = new ObservedPropertySimplePU(0, this, "updateTrigger");
         this.currentPage = 1;
         this.scroller = new Scroller();
         this.scrollWidth = DEFAULT_SCROLL_WIDTH;
@@ -39,6 +41,10 @@ export class WeekCalendar extends ViewPU {
         this.finalizeConstruction();
     }
     setInitiallyProvidedValue(params: WeekCalendar_Params) {
+        this.__homeStore.set(params.homeStore);
+        if (params.updateTrigger !== undefined) {
+            this.updateTrigger = params.updateTrigger;
+        }
         if (params.currentPage !== undefined) {
             this.currentPage = params.currentPage;
         }
@@ -56,21 +62,28 @@ export class WeekCalendar extends ViewPU {
         }
     }
     updateStateVars(params: WeekCalendar_Params) {
+        this.__homeStore.set(params.homeStore);
     }
     purgeVariableDependenciesOnElmtId(rmElmtId) {
         this.__homeStore.purgeDependencyOnElmtId(rmElmtId);
+        this.__updateTrigger.purgeDependencyOnElmtId(rmElmtId);
     }
     aboutToBeDeleted() {
         this.__homeStore.aboutToBeDeleted();
+        this.__updateTrigger.aboutToBeDeleted();
         SubscriberManager.Get().delete(this.id__());
         this.aboutToBeDeletedInternal();
     }
-    private __homeStore: SynchedPropertySimpleOneWayPU<HomeStore>;
+    private __homeStore: SynchedPropertyNesedObjectPU<HomeStore>;
     get homeStore() {
         return this.__homeStore.get();
     }
-    set homeStore(newValue: HomeStore) {
-        this.__homeStore.set(newValue);
+    private __updateTrigger: ObservedPropertySimplePU<number>;
+    get updateTrigger() {
+        return this.__updateTrigger.get();
+    }
+    set updateTrigger(newValue: number) {
+        this.__updateTrigger.set(newValue);
     }
     private currentPage: number;
     private scroller: Scroller;
@@ -89,14 +102,24 @@ export class WeekCalendar extends ViewPU {
         this.homeStore.setSelectedShowDate(new Date().getTime());
     }
     getProgressImg(item: WeekDateModel): Resource {
-        let finNum = item.dayInfo?.finTaskNum || 0;
+        const finNum = item.dayInfo?.finTaskNum || 0;
+        const targetNum = item.dayInfo?.targetTaskNum || 0;
+        const currentDate = new Date();
+        const itemDate = new Date(item.date);
+        // 判断是否为未来日期（当前日期之后）
+        if (itemDate > currentDate) {
+            return { "id": 16777343, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }; // 未来日期显示未完成图标
+        }
+        if (targetNum === 0) {
+            return { "id": 16777486, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }; // 新增：没有任务的图标
+        }
         if (finNum === 0) {
-            return { "id": 16777343, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" };
+            return { "id": 16777343, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }; // 有任务但未开始
         }
-        if (finNum === (item.dayInfo?.targetTaskNum || 0)) {
-            return { "id": 16777262, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" };
+        if (finNum === targetNum) {
+            return { "id": 16777262, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }; // 任务全部完成
         }
-        return { "id": 16777218, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" };
+        return { "id": 16777218, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }; // 部分完成
     }
     showCalendar() {
         router.pushUrl({ url: 'pages/CalendarDetailPage', params: this.homeStore });
@@ -104,18 +127,28 @@ export class WeekCalendar extends ViewPU {
     ArrowIcon(isRight: boolean, parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Row.create();
-            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(69:5)", "entry");
+            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(85:5)", "entry");
             Row.width({ "id": 16777440, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
             Row.height({ "id": 16777440, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
             Row.rotate({ z: 1, angle: isRight ? 0 : Const.DEFAULT_180 });
             Row.justifyContent(FlexAlign.Center);
-            Row.onClick(() => isRight ?
-                WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, ObservedObject.GetRawObject(this.homeStore), this.scroller) :
-                WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, ObservedObject.GetRawObject(this.homeStore), this.currentPage, this.scroller));
+            Row.onClick(() => {
+                Logger.info('WeekCalendar', `Arrow clicked: isRight=${isRight}, currentPage=${this.currentPage}`);
+                isRight ?
+                    (() => {
+                        Logger.info('WeekCalendar', `Calling goToNextWeek with params: currentPage=${this.currentPage}, isPageScroll=${this.isPageScroll}`);
+                        WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, ObservedObject.GetRawObject(this.homeStore), this.scroller);
+                    })() :
+                    (() => {
+                        WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, ObservedObject.GetRawObject(this.homeStore), this.currentPage, this.scroller);
+                        Logger.info(this.homeStore.dateTitle + "________________________________");
+                        this.updateTrigger += 1;
+                    })();
+            });
         }, Row);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Image.create({ "id": 16777349, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
-            Image.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(70:7)", "entry");
+            Image.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(86:7)", "entry");
             Image.width({ "id": 16777457, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
             Image.height({ "id": 16777434, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
         }, Image);
@@ -124,14 +157,14 @@ export class WeekCalendar extends ViewPU {
     initialRender() {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Row.create();
-            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(84:5)", "entry");
+            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(112:5)", "entry");
             Row.width(Const.THOUSANDTH_1000);
             Row.height(Const.THOUSANDTH_420);
             Row.padding(Const.THOUSANDTH_33);
         }, Row);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(85:7)", "entry");
+            Column.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(113:7)", "entry");
             Column.borderRadius({ "id": 16777443, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
             Column.backgroundColor({ "id": 16777261, "type": 10001, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
             Column.width(Const.THOUSANDTH_1000);
@@ -140,7 +173,7 @@ export class WeekCalendar extends ViewPU {
         }, Column);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Row.create();
-            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(86:9)", "entry");
+            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(114:9)", "entry");
             Row.margin({ left: 30 });
             Row.justifyContent(FlexAlign.Center);
         }, Row);
@@ -152,7 +185,12 @@ export class WeekCalendar extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new HealthText(this, { title: this.homeStore.dateTitle, fontSize: { "id": 16777437, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" } }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/WeekCalendarComponent.ets", line: 88, col: 11 });
+                    let componentCall = new 
+                    // 直接通过showDate计算标题，而非依赖dateTitle
+                    HealthText(this, {
+                        title: this.homeStore.dateTitle,
+                        fontSize: { "id": 16777437, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" }
+                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/WeekCalendarComponent.ets", line: 117, col: 11 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -178,7 +216,7 @@ export class WeekCalendar extends ViewPU {
                         clickAction: () => {
                             this.showCalendar();
                         }
-                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/WeekCalendarComponent.ets", line: 92, col: 11 });
+                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/view/home/WeekCalendarComponent.ets", line: 126, col: 11 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -197,7 +235,7 @@ export class WeekCalendar extends ViewPU {
         Row.pop();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Scroll.create(this.scroller);
-            Scroll.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(101:9)", "entry");
+            Scroll.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(135:9)", "entry");
             Scroll.scrollBar(BarState.Off);
             Scroll.scrollable(ScrollDirection.Horizontal);
             Scroll.width(Const.THOUSANDTH_1000);
@@ -206,7 +244,7 @@ export class WeekCalendar extends ViewPU {
         }, Scroll);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Row.create();
-            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(102:11)", "entry");
+            Row.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(136:11)", "entry");
         }, Row);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             ForEach.create();
@@ -214,14 +252,14 @@ export class WeekCalendar extends ViewPU {
                 const item = _item;
                 this.observeComponentCreation2((elmtId, isInitialRender) => {
                     Column.create();
-                    Column.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(104:15)", "entry");
+                    Column.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(138:15)", "entry");
                     Column.width(`${WEEK_DAY_WIDTH}%`);
                     Column.justifyContent(FlexAlign.SpaceBetween);
                     Column.onClick(() => WeekCalendarMethods.calenderItemClickAction(item, index, ObservedObject.GetRawObject(this.homeStore)));
                 }, Column);
                 this.observeComponentCreation2((elmtId, isInitialRender) => {
                     Text.create(item.weekTitle);
-                    Text.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(105:17)", "entry");
+                    Text.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(139:17)", "entry");
                     Text.fontSize({ "id": 16777434, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
                     Text.fontWeight(Const.FONT_WEIGHT_500);
                     Text.fontColor(sameDate(item.date, this.homeStore.showDate) ? { "id": 16777239, "type": 10001, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" } : { "id": 16777260, "type": 10001, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
@@ -231,14 +269,14 @@ export class WeekCalendar extends ViewPU {
                 Text.pop();
                 this.observeComponentCreation2((elmtId, isInitialRender) => {
                     Divider.create();
-                    Divider.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(112:17)", "entry");
+                    Divider.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(146:17)", "entry");
                     Divider.margin({ top: Const.DEFAULT_2, bottom: { "id": 16777449, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" } });
                     Divider.width({ "id": 16777434, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
                     Divider.color(sameDate(item.date, this.homeStore.showDate) ? { "id": 16777239, "type": 10001, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" } : { "id": 16777261, "type": 10001, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
                 }, Divider);
                 this.observeComponentCreation2((elmtId, isInitialRender) => {
                     Image.create(this.getProgressImg(item));
-                    Image.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(117:17)", "entry");
+                    Image.debugLine("entry/src/main/ets/view/home/WeekCalendarComponent.ets(151:17)", "entry");
                     Image.height({ "id": 16777446, "type": 10002, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
                     Image.objectFit(ImageFit.Contain);
                     Image.margin({ top: Const.THOUSANDTH_80 });

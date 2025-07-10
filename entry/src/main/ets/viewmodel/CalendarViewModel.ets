@@ -32,19 +32,21 @@ export interface ScrollTo {
 }
 
 function gotoPreviousWeek(isPageScroll: Boolean, homeStore: HomeStore, currentPage: number, scroller: Scroller) {
+  Logger.error("dddddddddddddddddddddddddddddddddddd")
   isPageScroll = true;
   let date: Date = new Date(homeStore.showDate);
   Logger.info('HomeIndex', 'gotoPreviousWeek: showDate_' + date.toISOString());
 
   if ((currentPage + LAZY_DATA_PAGE) * Const.WEEK_DAY_NUM > homeStore.dateArr.length) {
     // get more history data
+    Logger.info("dddddddddddddddddd111111111111111111111111111")
     homeStore.getPreWeekData(date, () => {
       homeStore.setSelectedShowDate(homeStore.showDate - Const.WEEK_DAY_TIME);
       currentPage += 1;
     });
   } else {
     scroller.scrollPage({ next: false } as ScrollPage);
-    Logger.info('HomeIndex', 'gotoPreviousWeek');
+    Logger.info('HomeIndex', 'gotoPreviousWeekdddddddddddddddddddddddd');
     homeStore.setSelectedShowDate(homeStore.showDate - Const.WEEK_DAY_TIME);
     currentPage += 1;
   }

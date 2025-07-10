@@ -65,31 +65,6 @@ function isAchieved(dateArr: Array<WeekDateModel>, cj: CJDateItem) {
     }
     return result;
 }
-function hasTask(dateArr: Array<WeekDateModel>, cj: CJDateItem) {
-    let result = false;
-    for (let item of dateArr) {
-        //遍历所有任务数据，获取任务时间
-        let dateStr_item_temp = String(item.date);
-        // 截取年、月、日，拼接为“YYYYMMDD”格式的数字字符串（如“20231005”）
-        let dateStr_item: string = `${dateStr_item_temp.toString()
-            .substring(0, 4)}${Number(dateStr_item_temp.toString()
-            .substring(5, 7))}${Number(dateStr_item_temp.toString()
-            .substring(8, 10))}`;
-        //转换日历组件中的日期的时间格式
-        let dateStr: string = `${cj.fullYear}${(cj.month + 1) % 12}${cj.date}`;
-        //如果当前任务时间和日历组件中的时间一致
-        if (Number(dateStr_item) == Number(dateStr)) {
-            //检查一下任务数量是否为0，返回结果
-            if (item.dayInfo.targetTaskNum == 0) {
-                result = false;
-            }
-            else {
-                result = true;
-            }
-        }
-    }
-    return result;
-}
 class CalendarDetailPage extends ViewPU {
     constructor(parent, params, __localStorage, elmtId = -1, paramsLambda = undefined, extraInfo) {
         super(parent, __localStorage, elmtId, extraInfo);
@@ -152,19 +127,19 @@ class CalendarDetailPage extends ViewPU {
     initialRender() {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Row.create();
-            Row.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(109:5)", "entry");
+            Row.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(85:5)", "entry");
             Row.height('100%');
         }, Row);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Navigation.create(new NavPathStack(), { moduleName: "entry", pagePath: "entry/src/main/ets/pages/CalendarDetailPage", isUserCreateStack: false });
-            Navigation.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(110:7)", "entry");
+            Navigation.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(86:7)", "entry");
             Navigation.size({ width: Const.THOUSANDTH_1000, height: Const.THOUSANDTH_1000 });
             Navigation.title('日历');
             Navigation.titleMode(NavigationTitleMode.Mini);
         }, Navigation);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(111:9)", "entry");
+            Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(87:9)", "entry");
             Column.width('100%');
         }, Column);
         {
@@ -198,7 +173,7 @@ class CalendarDetailPage extends ViewPU {
                         //   }
                         //   return cjDateItem
                         // },
-                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/CalendarDetailPage.ets", line: 112, col: 11 });
+                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/CalendarDetailPage.ets", line: 88, col: 11 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -241,66 +216,39 @@ class CalendarDetailPage extends ViewPU {
              * 判断用户当前单元格任务是否完成，如果完成填充图标，未完成则保持风格不变
              */
             // if (this.cjDataItem.date == Number((router.getParams() as HomeStore).dateArr[0].date)) { // 今天
-            if (hasTask((router.getParams() as HomeStore).dateArr, this.cjDataItem)) {
+            if (isAchieved((router.getParams() as HomeStore).dateArr, this.cjDataItem)) { // 今天
                 this.ifElseBranchUpdateFunction(0, () => {
                     this.observeComponentCreation2((elmtId, isInitialRender) => {
-                        If.create();
-                        if (isAchieved((router.getParams() as HomeStore).dateArr, this.cjDataItem)) { // 今天
-                            this.ifElseBranchUpdateFunction(0, () => {
-                                this.observeComponentCreation2((elmtId, isInitialRender) => {
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.create();
-                                    Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(161:9)", "entry");
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.backgroundImage({ "id": 16777262, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.renderFit(RenderFit.RESIZE_FILL);
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.backgroundColor(this.cjCellStatus.backgroundColor);
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.width('85%');
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.aspectRatio(1);
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.border({
-                                        width: this.cjCellStyle.borderWidth,
-                                        color: this.cjCellStyle.borderColor
-                                    });
-                                    //   if (this.cjDataItem.isToday) { // 今天
-                                    Column.borderRadius(this.cjCellStyle.borderRadius);
-                                }, Column);
-                                //   if (this.cjDataItem.isToday) { // 今天
-                                Column.pop();
-                            });
-                        }
-                        else {
-                            this.ifElseBranchUpdateFunction(1, () => {
-                                this.observeComponentCreation2((elmtId, isInitialRender) => {
-                                    Column.create();
-                                    Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(178:9)", "entry");
-                                    Column.backgroundColor(this.cjCellStatus.backgroundColor);
-                                    Column.width('85%');
-                                    Column.aspectRatio(1);
-                                    Column.border({
-                                        width: this.cjCellStyle.borderWidth,
-                                        color: this.cjCellStyle.borderColor
-                                    });
-                                    Column.borderRadius(this.cjCellStyle.borderRadius);
-                                }, Column);
-                                Column.pop();
-                            });
-                        }
-                    }, If);
-                    If.pop();
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.create();
+                        Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(136:7)", "entry");
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.backgroundImage({ "id": 16777262, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.renderFit(RenderFit.RESIZE_FILL);
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.backgroundColor(this.cjCellStatus.backgroundColor);
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.width('85%');
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.aspectRatio(1);
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.border({
+                            width: this.cjCellStyle.borderWidth,
+                            color: this.cjCellStyle.borderColor
+                        });
+                        //   if (this.cjDataItem.isToday) { // 今天
+                        Column.borderRadius(this.cjCellStyle.borderRadius);
+                    }, Column);
+                    //   if (this.cjDataItem.isToday) { // 今天
+                    Column.pop();
                 });
             }
             else {
                 this.ifElseBranchUpdateFunction(1, () => {
                     this.observeComponentCreation2((elmtId, isInitialRender) => {
                         Column.create();
-                        Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(189:7)", "entry");
-                        Column.backgroundImage({ "id": 16777486, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
-                        Column.renderFit(RenderFit.RESIZE_FILL);
+                        Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(153:7)", "entry");
                         Column.backgroundColor(this.cjCellStatus.backgroundColor);
                         Column.width('85%');
                         Column.aspectRatio(1);
@@ -319,12 +267,12 @@ class CalendarDetailPage extends ViewPU {
     BuildCellBody(parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(213:5)", "entry");
+            Column.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(168:5)", "entry");
             Column.alignItems(HorizontalAlign.Center);
         }, Column);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Text.create(this.cjDataItem.date + '');
-            Text.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(214:7)", "entry");
+            Text.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(169:7)", "entry");
             Text.fontColor(this.cjCellStatus.fontColor);
             Text.fontSize(this.cjCellStyle.fontSize);
             Text.fontWeight(this.cjCellStyle.fontFontWeight);
@@ -336,7 +284,7 @@ class CalendarDetailPage extends ViewPU {
                 this.ifElseBranchUpdateFunction(0, () => {
                     this.observeComponentCreation2((elmtId, isInitialRender) => {
                         Image.create({ "id": 16777262, "type": 20000, params: [], "bundleName": "com.example.healthy_life", "moduleName": "entry" });
-                        Image.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(219:9)", "entry");
+                        Image.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(174:9)", "entry");
                         Image.objectFit(ImageFit.Contain);
                         Image.height('20vp');
                         Image.width('20vp');
@@ -348,7 +296,7 @@ class CalendarDetailPage extends ViewPU {
                 this.ifElseBranchUpdateFunction(1, () => {
                     this.observeComponentCreation2((elmtId, isInitialRender) => {
                         Text.create('');
-                        Text.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(225:9)", "entry");
+                        Text.debugLine("entry/src/main/ets/pages/CalendarDetailPage.ets(180:9)", "entry");
                         Text.height('20vp');
                         Text.width('20vp');
                         Text.margin({ top: '0vp' });

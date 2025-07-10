@@ -18,7 +18,7 @@ import WeekCalendarMethods, { ScrollTo } from '../../viewmodel/CalendarViewModel
 import { HomeStore } from '../../viewmodel/HomeViewModel';
 import HealthText from '../../view/HealthTextComponent';
 import { WeekDateModel } from '../../model/WeekCalendarModel';
-import { sameDate } from '../../common/utils/Utils';
+import { sameDate, weekDateFormat } from '../../common/utils/Utils';
 import { CommonConstants as Const } from '../../common/constants/CommonConstants';
 import Logger from '../../common/utils/Logger';
 import AddCalendarBtn from './AddCalendarBtnComponent';
@@ -31,6 +31,7 @@ const DEFAULT_SCROLL_PERCENT = 0.934; // default calendar width percent
 @Component
 export struct WeekCalendar {
   @Link homeStore: HomeStore;
+  @State updateTrigger: number = 0;
   currentPage: number = 1;
   private scroller: Scroller = new Scroller();
   scrollWidth: number = DEFAULT_SCROLL_WIDTH;
@@ -90,19 +91,40 @@ export struct WeekCalendar {
     .height($r('app.float.default_20'))
     .rotate({ z: 1, angle: isRight ? 0 : Const.DEFAULT_180 })
     .justifyContent(FlexAlign.Center)
-    .onClick(() => isRight ?
-    WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, this.homeStore, this.scroller) :
-    WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, this.homeStore, this.currentPage, this.scroller))
+    .onClick(() => {
+      Logger.info('WeekCalendar', `Arrow clicked: isRight=${isRight}, currentPage=${this.currentPage}`);
+      isRight ?
+      (() => {
+        Logger.info('WeekCalendar', `Calling goToNextWeek with params: currentPage=${this.currentPage}, isPageScroll=${this.isPageScroll}`);
+        WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, this.homeStore, this.scroller);
+      })() :
+      (() => {
+
+        WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, this.homeStore, this.currentPage, this.scroller);
+        Logger.info(this.homeStore.dateTitle+"________________________________")
+        this.updateTrigger+=1
+      })()
+    })
+
   }
 
   build() {
+
     Row() {
       Column() {
+
         Row() {
           this.ArrowIcon(false)
-          HealthText({ title: this.homeStore.dateTitle, fontSize: $r('app.float.default_14') })
+          // 直接通过showDate计算标题，而非依赖dateTitle
+
+          HealthText({
+            title: this.homeStore.getDateTitle(),
+            fontSize: $r('app.float.default_14')
+          })
             .margin($r('app.float.default_12'))
           this.ArrowIcon(true)
+
+
 
           AddCalendarBtn({
             clickAction: () => {
@@ -190,4 +212,5 @@ export struct WeekCalendar {
       }
     }
   }
+
 }

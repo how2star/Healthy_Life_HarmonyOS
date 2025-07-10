@@ -13,7 +13,7 @@ enum UpdateStatus {
 @Entry
 @Component
 struct Index {
-  @State message: string = '您当前版本是1.1.1';
+  @State message: string = '您当前版本是1.0.0';
   @State updateStatus: UpdateStatus = UpdateStatus.IDLE;
 
   // 模拟检查更新的异步操作
@@ -23,14 +23,10 @@ struct Index {
 
     await new Promise<void>(resolve => setTimeout(resolve, 1500));
 
-    const hasNewVersion = Math.random() > 0.5;
-    if (hasNewVersion) {
+
       this.updateStatus = UpdateStatus.UPDATE_AVAILABLE;
       this.message = '检测到新版本2.0.0，是否更新？';
-    } else {
-      this.updateStatus = UpdateStatus.IDLE;
-      this.message = '最新版本是1.1.1，您当前已经是最新版本';
-    }
+
   }
 
   // 执行更新操作
@@ -46,18 +42,26 @@ struct Index {
   }
 
   // 重启应用
+  // restartApp() {
+  //   const context = getContext(this) as common.UIAbilityContext;
+  //   promptAction.showToast({ message: '应用即将重启' });
+  //
+  //   // 延迟执行重启，确保toast显示
+  //   setTimeout(() => {
+  //     // 关闭当前应用
+  //     context.terminateSelf();
+  //
+  //     // 实际项目中需要通过其他方式重新启动应用
+  //     // 例如：使用startAbility打开应用入口
+  //   }, 1000);
+  // }
   restartApp() {
-    const context = getContext(this) as common.UIAbilityContext;
-    promptAction.showToast({ message: '应用即将重启' });
-
-    // 延迟执行重启，确保toast显示
-    setTimeout(() => {
-      // 关闭当前应用
-      context.terminateSelf();
-
-      // 实际项目中需要通过其他方式重新启动应用
-      // 例如：使用startAbility打开应用入口
-    }, 1000);
+    router.pushUrl({
+      url: 'pages/AdvertisingPage',
+      params: {
+        isNewVersion: true // 传递参数：标识是新版本更新后跳转
+      }
+    })
   }
 
   build() {
@@ -121,10 +125,10 @@ struct Index {
   }
 
   // 处理按钮点击
+  // 处理按钮点击
   handleButtonClick() {
     switch (this.updateStatus) {
       case UpdateStatus.IDLE:
-      case UpdateStatus.READY_TO_RESTART:
         this.checkUpdate();
         break;
       case UpdateStatus.UPDATE_AVAILABLE:
@@ -133,6 +137,9 @@ struct Index {
       case UpdateStatus.READY_TO_RESTART:
         this.restartApp();
         break;
+      // 可以添加默认情况处理未知状态
+      default:
+        console.log("未知状态:", this.updateStatus);
     }
   }
 }

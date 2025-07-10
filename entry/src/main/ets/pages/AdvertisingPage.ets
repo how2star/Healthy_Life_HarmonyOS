@@ -28,15 +28,30 @@ struct AdvertisingPage {
   @State duration: number = Const.AD_DURATION;
   // 定时器 ID，用于管理倒计时
   private intervalId: number = -1;
+  // 新增：接收是否为新版本的标识（默认false）
+  @State isNewVersion: boolean = false;
+
 
   goToHomePage() {
     clearInterval(this.intervalId);
     router.replaceUrl({ url: 'pages/MainPage' });
   }
 
+
+
   //组件即将显示时触发的生命周期方法，用于初始化倒计时。
   //注册定时器并且每秒做一次，倒计时结束之后进入home首页
   aboutToAppear() {
+    interface PageBParams {
+      isNewVersion? : boolean
+    }
+    // 类型断言后访问（避免索引访问错误）
+    const params = router.getParams() as PageBParams;
+    if(params?.isNewVersion){
+      this.isNewVersion = params?.isNewVersion
+      this.duration = 3
+    }
+
     this.intervalId = setInterval(() => {
       if (this.duration > 0) {
         this.duration -= 1;
@@ -45,6 +60,7 @@ struct AdvertisingPage {
       }
     }, Const.DURATION_1000)
   }
+
 
   build() {
     Column() {
@@ -94,7 +110,7 @@ struct AdvertisingPage {
     .width('100%')
     .height('100%')
     .backgroundImagePosition({ x: 0, y: 0 })
-    .backgroundImage($r('app.media.ic_ad_bg'))
+    .backgroundImage(this.isNewVersion?$r('app.media.1111111'):$r('app.media.ic_ad_bg'))
     .backgroundImageSize({ width: '100%', height: '100%' })
     .justifyContent(FlexAlign.SpaceBetween)
   }

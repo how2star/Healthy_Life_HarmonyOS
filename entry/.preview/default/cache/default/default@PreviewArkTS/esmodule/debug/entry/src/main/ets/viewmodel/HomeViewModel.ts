@@ -185,7 +185,9 @@ export class HomeStore {
         if (selectedInfo) {
             this.updateSelectedDayInfo(selectedInfo);
         }
-        Logger.info('dateTitle', this.dateTitle);
+        //这里也是执行了
+        Logger.info('dateTitle++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.dateTitle);
+        Logger.info('dateTitle++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.dateTitle);
     }
     public getDonePercent(): string {
         let dayInfo = this.selectedDayInfo?.dayInfo;
