@@ -29,25 +29,7 @@ import { CommonConstants as Const, Unit, TaskType } from '../constants/CommonCon
 import DayInfo from '../../viewmodel/DayInfo';
 import { GlobalContext } from './GlobalContext';
 
-<<<<<<< HEAD
 class FormUtils {
-  /**
-   * Insert form data
-   *
-=======
-/**
- * 卡片管理的工具
- * 用于管理 HarmonyOS 应用中的 ** 卡片（Form）** 功能，包括卡片数据的增删改查、定时更新以及与数据库的交互。
- * 该类封装了卡片管理的核心逻辑，并通过单例模式提供全局访问。
- */
-class FormUtils {
-  /**
-   * Insert form data
-   * 插入数据
->>>>>>> origin/cjh
-   * @param {Context} context Indicates the context of application or capability.
-   * @param {FormInfo} formInfo Insert the form information to be saved.
-   */
   public insertFormData(context: Context, formInfo: FormInfo): void {
     RdbUtils.initDb(context, Const.RDB_NAME.dbName ? Const.RDB_NAME.dbName : '');
     let isCreatePromise = RdbUtils.isCreateTable(Const.FORM_INFO.tableName ?
@@ -66,15 +48,6 @@ class FormUtils {
     });
   }
 
-  /**
-   * Update card operation
-<<<<<<< HEAD
-   *
-=======
-   * 更新数据
->>>>>>> origin/cjh
-   * @param {Context} context Indicates the context of application or capability.
-   */
   public updateCards(context: Context): void {
     RdbUtils.initDb(context, Const.RDB_NAME.dbName ? Const.RDB_NAME.dbName : '');
     let isCreatePromise = RdbUtils.isCreateTable(Const.FORM_INFO.tableName ?

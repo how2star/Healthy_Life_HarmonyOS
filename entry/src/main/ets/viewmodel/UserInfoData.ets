@@ -15,11 +15,11 @@
 
 export default class AccountData {
   id: number = -1;
-<<<<<<< HEAD
+// <<<<<<< HEAD
   username: string = 'SpongeBob';
-=======
-  username: string = '用户 001';
->>>>>>> origin/cjh
+// =======
+//   username: string = '用户 001';
+// >>>>>>> origin/cjh
   year: string = '2000';
   mouth: string = '1';
   date: string = '1';
@@ -27,8 +27,8 @@ export default class AccountData {
   weight: string = '50';
   height: string = '160';
   icon: string = '';
-<<<<<<< HEAD
+// <<<<<<< HEAD
   signature: string = "这是一条个性签名";
-=======
->>>>>>> origin/cjh
+// =======
+// >>>>>>> origin/cjh
 }

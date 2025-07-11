@@ -58,10 +58,9 @@ export struct AboutPage {
 
         // 返回按钮
         Image($r('app.media.ic_back'))
-          .width(32)
-          .height(32)
           .align(Alignment.TopStart)
-          .position({ x: 16, y: 16 })
+          .width(40).height(40)
+          .position({ x: 18, y: 18 })
           .onClick(() => this.goBack());
       }
 

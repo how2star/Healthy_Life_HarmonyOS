@@ -37,7 +37,7 @@ export struct AboutListInfo {
           // 版本更新 *路由待修改*
           if(item.id == '2'){
             router.pushUrl({
-              url: 'pages/MineEditPage',
+              url: 'pages/CheckUpdatePage',
             })
           }
           // 功能介绍

@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
-
-=======
+// <<<<<<< HEAD
+//
+// =======
 /**
  AgencyCard 组件实现了一个可根据数据动态渲染的任务卡片列表 UI：
  利用 LocalStorage 做局部状态管理，响应式更新 UI；
@@ -27,7 +27,7 @@
  * LocalStorage 是 ArkTS 中用于组件树局部状态管理的工具，创建 agencyStorage 实例并通过 @Entry 装饰器关联到组件，
  * 让该组件及其子组件可共享 agencyStorage 里的状态（如 taskList、showWidget ），实现局部状态的传递和响应式更新 。
  */
->>>>>>> origin/cjh
+// >>>>>>> origin/cjh
 let agencyStorage = new LocalStorage();
 
 @Entry(agencyStorage)
