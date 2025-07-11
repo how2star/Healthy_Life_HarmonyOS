@@ -13,6 +13,9 @@
     "pages/FeedbackPage",
     "pages/HelpPage",
     "pages/FunctionPage",
-    "pages/MineEditSignaturePage"
+    "pages/MineEditSignaturePage",
+    "pages/CheckUpdatePage"
+
   ]
 }
+

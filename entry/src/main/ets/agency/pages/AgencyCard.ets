@@ -12,7 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
 
+=======
+/**
+ AgencyCard 组件实现了一个可根据数据动态渲染的任务卡片列表 UI：
+ 利用 LocalStorage 做局部状态管理，响应式更新 UI；
+ 通过条件渲染、列表渲染展示任务数据或空状态；
+ 封装了可复用的 UI 片段（AgencyNoData、AgencyComponent ）；
+ 支持点击跳转应用页面，是一个典型的、具备数据驱动 UI 渲染和交互能力的自定义业务组件，常用于 HarmonyOS 应用的卡片、任务列表等场景。务数据时展示空状态，且可点击跳转应用页面。
+ */
+
+/**
+ * LocalStorage 是 ArkTS 中用于组件树局部状态管理的工具，创建 agencyStorage 实例并通过 @Entry 装饰器关联到组件，
+ * 让该组件及其子组件可共享 agencyStorage 里的状态（如 taskList、showWidget ），实现局部状态的传递和响应式更新 。
+ */
+>>>>>>> origin/cjh
 let agencyStorage = new LocalStorage();
 
 @Entry(agencyStorage)

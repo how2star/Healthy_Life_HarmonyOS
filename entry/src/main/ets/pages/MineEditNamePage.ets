@@ -44,8 +44,6 @@ struct CustomDialogExample {
 struct CustomDialogExample2 {
   controller?: CustomDialogController;
 
-
-
   build() {
     Column() {
       Text("保存成功")
@@ -148,6 +146,7 @@ struct Index {
                 this.UserInfoTable.query(1, (result: UserInfoData[]) => { // 查询数据库中的用户
                   // this.userInfo.push(result[0]);
                   this.userInfo = [result[0]];
+                  this.userInfo.push(result[0]);
                   this.userInfo[0].username = this.name
                   Logger.info('MineEditNamePage', `${this.name}`);
                   this.UserInfoTable.updateData(this.userInfo[0], () => {

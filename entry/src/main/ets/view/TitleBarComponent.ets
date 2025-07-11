@@ -20,9 +20,25 @@ export struct TitleBar {
     Row() {
       Text($r('app.string.achievement'))
         .fontSize($r('app.float.default_24'))
-        .fontColor($r('app.color.white'))
+// <<<<<<< HEAD
+//         .fontColor($r('app.color.white'))
+//         .align(Alignment.Start)
+//         .padding({ left: Const.ACHIEVE_TITLE_BAR_LEFT, top: Const.ACHIEVE_TITLE_BAR_TOP })
+// =======
+        .fontColor($r('app.color.gold'))
+        .fontWeight('bold')
         .align(Alignment.Start)
         .padding({ left: Const.ACHIEVE_TITLE_BAR_LEFT, top: Const.ACHIEVE_TITLE_BAR_TOP })
+        .textShadow({radius:5})
+        // 添加下划线，不好看
+        // .decoration(
+        //   {
+        //     type: TextDecorationType.Underline,
+        //     color: $r('app.color.gold'),
+        //     style: TextDecorationStyle.SOLID
+        //   }
+        // )
+// >>>>>>> origin/cjh
     }
     .width(Const.FULL_WIDTH)
   }

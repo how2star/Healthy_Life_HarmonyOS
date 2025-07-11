@@ -5,6 +5,10 @@
       "value": "#FFFFFF"
     },
     {
+      "name": "gold",
+      "value": "#FFD700"
+    },
+    {
       "name": "primaryBgColor",
       "value": "#F1F3F5"
     },

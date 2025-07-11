@@ -8,4 +8,15 @@
 /.clangd
 /.clang-format
 /.clang-tidy
+#<<<<<<< HEAD
+#**/.test
+#=======
 **/.test
+
+/build-profile.json5
+/oh-package.json5
+/hvigor
+
+/entry/build
+/entry/.preview
+#>>>>>>> origin/cjh

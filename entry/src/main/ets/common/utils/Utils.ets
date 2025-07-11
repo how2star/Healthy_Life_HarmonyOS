@@ -12,6 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
+=======
+/**
+ * 日期和时间格式化工具库，提供了一系列用于处理日期、时间和频率的辅助函数，
+ * 主要用于 HarmonyOS 应用开发中统一日期显示格式和处理常见时间操作。
+ */
+>>>>>>> origin/cjh
 import { FrequencyContentType } from '../../model/TaskInitList';
 
 const CHINESE_OF_WEEK: string[] = ['一', '二', '三', '四', '五', '六', '日'];

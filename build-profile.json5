@@ -6,7 +6,11 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compatibleSdkVersion": "5.0.0(12)",
+//<<<<<<< HEAD
+//        "compatibleSdkVersion": "5.0.0(12)",
+//=======
+        "compatibleSdkVersion": "5.0.3(15)",
+//>>>>>>> origin/cjh
         "runtimeOS": "HarmonyOS"
       }
     ]

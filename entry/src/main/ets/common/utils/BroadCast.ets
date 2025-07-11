@@ -12,6 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
+=======
+/**
+ * 该类实现了事件的注册（监听）、取消注册、触发（发布） 三大核心功能，是组件间通信的 “中间枢纽”。
+ */
+>>>>>>> origin/cjh
 import { CustomDialogCallback } from '../../view/dialog/CustomDialogView';
 import BroadCastCallBackInfo from '../../viewmodel/BroadCastCallBackInfo';
 import TaskInfo from '../../viewmodel/TaskInfo';
@@ -23,8 +29,22 @@ const FILE_TAG = 'BroadCast';
 
 const callBackArrayTemp = new BroadCastCallBackInfo();
 
+<<<<<<< HEAD
 export class BroadCast {
   private callBackArray: BroadCastCallBackInfo = callBackArrayTemp;
+=======
+/**
+ * 一个基于事件广播机制的工具类 BroadCast，以及配套的事件类型枚举 BroadCastType，
+ * 主要用于在应用内不同组件之间进行解耦的事件通信（类似 “发布 - 订阅” 模式），
+ * 尤其专注于管理各类弹窗的显示事件。
+ *
+ * 总的来说，用于发布消息，监听消息
+ */
+export class BroadCast {
+  private callBackArray: BroadCastCallBackInfo = callBackArrayTemp;
+  // 注册事件监听器（订阅事件）。当指定事件被触发时，执行传入的 callback 函数。
+  // 根据事件类型，回调对应函数，比如存储数据之类的
+>>>>>>> origin/cjh
 
   public on(event: string, callback: Function) {
     Logger.info(FILE_TAG, 'register broadcast with type '+ event);
@@ -54,7 +74,11 @@ export class BroadCast {
         break;
     }
   }
+<<<<<<< HEAD
 
+=======
+  //取消事件监听器，取消事件
+>>>>>>> origin/cjh
   public off(event: string, callback: Function) {
     if (event === null) {
       Logger.info(FILE_TAG, 'cancel all broadcast');
@@ -93,7 +117,11 @@ export class BroadCast {
       }
     }
   }
+<<<<<<< HEAD
 
+=======
+  // 触发指定事件，发布事件，传递参数给该事件的所有监听器
+>>>>>>> origin/cjh
   public emit(event: string, args?: (number | number[] | (TaskInfo | CustomDialogCallback)[])) {
     if (!this.callBackArray) {
       Logger.info(FILE_TAG, 'emit broadcast failed for no callback');
@@ -142,7 +170,11 @@ export class BroadCast {
     }
   }
 }
+<<<<<<< HEAD
 
+=======
+//  枚举了所有的事件类型
+>>>>>>> origin/cjh
 export enum BroadCastType {
   SHOW_ACHIEVEMENT_DIALOG = 'showAchievementDialog',
   SHOW_SINGLE_ACHIEVEMENT_DIALOG = 'showSingleAchievementDialog',

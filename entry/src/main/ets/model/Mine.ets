@@ -32,6 +32,10 @@ export const MineInfoList: InfoItem[] = [
     id: '3',
     title: $r('app.string.mine_about')
   }
+<<<<<<< HEAD
 ];
 
 
+=======
+];
+>>>>>>> origin/cjh

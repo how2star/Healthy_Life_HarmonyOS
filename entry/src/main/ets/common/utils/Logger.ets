@@ -13,6 +13,12 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
+=======
+/**
+ * 日志工具类
+ */
+>>>>>>> origin/cjh
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
 const LOGGER_PREFIX: string = 'Healthy_life';

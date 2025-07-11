@@ -16,18 +16,42 @@
 import { router } from '@kit.ArkUI';
 import { CommonConstants as Const } from '../common/constants/CommonConstants';
 
+/**
+ * 程序入口，打开app的广告页
+ * 这段代码定义了一个 AdvertisingPage 组件，即应用的启动广告页（闪屏广告页），
+ * 用于在应用启动时展示广告内容，并支持倒计时自动跳转或用户手动点击跳转至应用主页。
+ */
 @Entry
 @Component
 struct AdvertisingPage {
+  //状态变量，广告倒计时秒数，初始值从常量读取
   @State duration: number = Const.AD_DURATION;
+  // 定时器 ID，用于管理倒计时
   private intervalId: number = -1;
+  // 新增：接收是否为新版本的标识（默认false）
+  @State isNewVersion: boolean = false;
+
 
   goToHomePage() {
     clearInterval(this.intervalId);
     router.replaceUrl({ url: 'pages/MainPage' });
   }
 
+
+
+  //组件即将显示时触发的生命周期方法，用于初始化倒计时。
+  //注册定时器并且每秒做一次，倒计时结束之后进入home首页
   aboutToAppear() {
+    interface PageBParams {
+      isNewVersion? : boolean
+    }
+    // 类型断言后访问（避免索引访问错误）
+    const params = router.getParams() as PageBParams;
+    if(params?.isNewVersion){
+      this.isNewVersion = params?.isNewVersion
+      this.duration = 3
+    }
+
     this.intervalId = setInterval(() => {
       if (this.duration > 0) {
         this.duration -= 1;
@@ -36,6 +60,7 @@ struct AdvertisingPage {
       }
     }, Const.DURATION_1000)
   }
+
 
   build() {
     Column() {
@@ -85,7 +110,8 @@ struct AdvertisingPage {
     .width('100%')
     .height('100%')
     .backgroundImagePosition({ x: 0, y: 0 })
-    .backgroundImage($r('app.media.ic_ad_bg'))
+
+    .backgroundImage(this.isNewVersion?$r('app.media.1111111'):$r('app.media.ic_ad_bg'))
     .backgroundImageSize({ width: '100%', height: '100%' })
     .justifyContent(FlexAlign.SpaceBetween)
   }

@@ -18,7 +18,11 @@ import WeekCalendarMethods, { ScrollTo } from '../../viewmodel/CalendarViewModel
 import { HomeStore } from '../../viewmodel/HomeViewModel';
 import HealthText from '../../view/HealthTextComponent';
 import { WeekDateModel } from '../../model/WeekCalendarModel';
-import { sameDate } from '../../common/utils/Utils';
+// <<<<<<< HEAD
+// import { sameDate } from '../../common/utils/Utils';
+// =======
+import { sameDate, weekDateFormat } from '../../common/utils/Utils';
+// >>>>>>> origin/cjh
 import { CommonConstants as Const } from '../../common/constants/CommonConstants';
 import Logger from '../../common/utils/Logger';
 import AddCalendarBtn from './AddCalendarBtnComponent';
@@ -31,6 +35,9 @@ const DEFAULT_SCROLL_PERCENT = 0.934; // default calendar width percent
 @Component
 export struct WeekCalendar {
   @Link homeStore: HomeStore;
+
+  @State updateTrigger: number = 0;
+
   currentPage: number = 1;
   private scroller: Scroller = new Scroller();
   scrollWidth: number = DEFAULT_SCROLL_WIDTH;
@@ -49,14 +56,40 @@ export struct WeekCalendar {
   }
 
   getProgressImg(item: WeekDateModel): Resource {
-    let finNum = item.dayInfo?.finTaskNum || 0;
+// <<<<<<< HEAD
+//     let finNum = item.dayInfo?.finTaskNum || 0;
+//     if (finNum === 0) {
+//       return $r('app.media.ic_home_undone');
+//     }
+//     if (finNum === (item.dayInfo?.targetTaskNum || 0)) {
+//       return $r('app.media.ic_home_all_done');
+//     }
+//     return $r('app.media.ic_home_half_done');
+// =======
+    const finNum = item.dayInfo?.finTaskNum || 0;
+    const targetNum = item.dayInfo?.targetTaskNum || 0;
+    const currentDate = new Date();
+    const itemDate = new Date(item.date);
+
+    // 判断是否为未来日期（当前日期之后）
+    if (itemDate > currentDate) {
+      return $r('app.media.ic_home_undone'); // 未来日期显示未完成图标
+    }
+
+    if (targetNum === 0) {
+      return $r('app.media.ic_home_no_task'); // 新增：没有任务的图标
+    }
+
     if (finNum === 0) {
-      return $r('app.media.ic_home_undone');
+      return $r('app.media.ic_home_undone'); // 有任务但未开始
     }
-    if (finNum === (item.dayInfo?.targetTaskNum || 0)) {
-      return $r('app.media.ic_home_all_done');
+
+    if (finNum === targetNum) {
+      return $r('app.media.ic_home_all_done'); // 任务全部完成
     }
-    return $r('app.media.ic_home_half_done');
+
+    return $r('app.media.ic_home_half_done'); // 部分完成
+// >>>>>>> origin/cjh
   }
 
   showCalendar() {
@@ -75,20 +108,58 @@ export struct WeekCalendar {
     .height($r('app.float.default_20'))
     .rotate({ z: 1, angle: isRight ? 0 : Const.DEFAULT_180 })
     .justifyContent(FlexAlign.Center)
-    .onClick(() => isRight ?
-    WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, this.homeStore, this.scroller) :
-    WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, this.homeStore, this.currentPage, this.scroller))
+// <<<<<<< HEAD
+//     .onClick(() => isRight ?
+//     WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, this.homeStore, this.scroller) :
+//     WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, this.homeStore, this.currentPage, this.scroller))
+//   }
+//
+//   build() {
+//     Row() {
+//       Column() {
+//         Row() {
+//           this.ArrowIcon(false)
+//           HealthText({ title: this.homeStore.dateTitle, fontSize: $r('app.float.default_14') })
+//             .margin($r('app.float.default_12'))
+//           this.ArrowIcon(true)
+//
+// =======
+    .onClick(() => {
+      Logger.info('WeekCalendar', `Arrow clicked: isRight=${isRight}, currentPage=${this.currentPage}`);
+      isRight ?
+      (() => {
+        Logger.info('WeekCalendar', `Calling goToNextWeek with params: currentPage=${this.currentPage}, isPageScroll=${this.isPageScroll}`);
+        WeekCalendarMethods.goToNextWeek(this.currentPage, this.isPageScroll, this.homeStore, this.scroller);
+      })() :
+      (() => {
+
+        WeekCalendarMethods.gotoPreviousWeek(this.isPageScroll, this.homeStore, this.currentPage, this.scroller);
+        Logger.info(this.homeStore.dateTitle+"________________________________")
+        this.updateTrigger+=1
+      })()
+    })
+
   }
 
   build() {
+
     Row() {
       Column() {
+
         Row() {
           this.ArrowIcon(false)
-          HealthText({ title: this.homeStore.dateTitle, fontSize: $r('app.float.default_14') })
+          // 直接通过showDate计算标题，而非依赖dateTitle
+
+          HealthText({
+            title: this.homeStore.getDateTitle(),
+            fontSize: $r('app.float.default_14')
+          })
             .margin($r('app.float.default_12'))
           this.ArrowIcon(true)
 
+
+
+// >>>>>>> origin/cjh
           AddCalendarBtn({
             clickAction: () => {
               this.showCalendar();
@@ -175,4 +246,8 @@ export struct WeekCalendar {
       }
     }
   }
+// <<<<<<< HEAD
+// =======
+//
+// >>>>>>> origin/cjh
 }

@@ -42,18 +42,15 @@ export struct MineListInfo {
           color: $r('app.color.borderColor')
         })
         .onClick(() => {
-          // 跳转个人资料
           if (item.id == '1') {
             router.pushUrl({
               url: 'pages/MineEditPage',
             })
-          }
-          else if(item.id == '2'){
+          } else if(item.id == '2') {
             router.pushUrl({
-              url: 'pages/MineEditPage',
+              url: 'pages/CheckUpdatePage',
             })
-          }
-          else if(item.id == '3'){
+          } else if(item.id == '3') {
             router.pushUrl({
               url: 'pages/AboutPage',
             })

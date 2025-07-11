@@ -97,6 +97,7 @@ struct Index {
     };
     // 收到eventId为1的事件后执行该回调
     let callback = (eventData: emitter.EventData): void => {
+
       let userName = eventData.data?.content as string
       this.userInfo[0].username = userName;
       this.nickname = this.userInfo[0].username
@@ -155,6 +156,7 @@ struct Index {
               .fontColor($r('app.color.no_data_background'))
               .textAlign(TextAlign.End)
           } else if (url == 'pages/MineEditNamePage'){
+
             Text(this.nickname)
               .fontSize($r('app.float.card_padding'))
               .fontWeight(FontWeight.Medium)
@@ -166,6 +168,7 @@ struct Index {
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.no_data_background'))
               .textAlign(TextAlign.End)
+
           }
 
 

@@ -235,6 +235,11 @@
     {
       "name": "weight",
       "value": "体重"
+
+    },
+    {
+      "name": "check_update",
+      "value": "检查更新"
     }
   ]
 }

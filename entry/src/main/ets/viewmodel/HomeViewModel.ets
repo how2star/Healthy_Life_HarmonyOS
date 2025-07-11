@@ -209,7 +209,17 @@ export class HomeStore {
     if (selectedInfo) {
       this.updateSelectedDayInfo(selectedInfo);
     }
-    Logger.info('dateTitle', this.dateTitle);
+// <<<<<<< HEAD
+//     Logger.info('dateTitle', this.dateTitle);
+// =======
+    //这里也是执行了
+
+    Logger.info('dateTitle++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.dateTitle);
+    Logger.info('dateTitle++++++++++++++++++++++++++++++++++++++++++++++++++++++', this.dateTitle);
+  }
+  public getDateTitle(): string{
+    return this.dateTitle
+// >>>>>>> origin/cjh
   }
 
   public getDonePercent(): string {
